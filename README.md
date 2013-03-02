@@ -10,7 +10,7 @@ Maybe one day I will extract input logic to separated library.
 
 ## Usage
 
-* use rfcomm to bind bluetooth as searial port
+* use rfcomm to bind bluetooth as serial port
 * baudrate is 9600
 * `./run.sh`
 
