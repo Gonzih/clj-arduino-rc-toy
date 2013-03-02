@@ -1,7 +1,7 @@
 (ns clj-rc-toy.loop
-  (:use [clj-rc-toy.input]
-        [clj-rc-toy.finders]
-        [clj-rc-toy.events]))
+  (:require [clj-rc-toy.input   :refer :all]
+            [clj-rc-toy.finders :refer :all]
+            [clj-rc-toy.events  :refer :all]))
 
 (defn loop-states
   ([controllers send-fn] (loop-states controllers send-fn (poll-states controllers)))
