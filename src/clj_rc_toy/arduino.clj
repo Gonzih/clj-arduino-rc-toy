@@ -11,8 +11,8 @@
 (def left-pins  [2 3 11])
 (def right-pins [4 5 10])
 
-(def port (System/getenv "PORT"))
-(def board (delay (init-board port)))
+(defn port [] (System/getenv "PORT"))
+(def board (delay (init-board (port))))
 
 (defn init-pin [pin]
   (pin-mode board pin OUTPUT))
