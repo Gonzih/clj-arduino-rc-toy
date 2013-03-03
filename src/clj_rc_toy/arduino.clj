@@ -12,7 +12,7 @@
 (def right-pins [4 5 10])
 
 (def port (System/getenv "PORT"))
-(def board (init-board port))
+(def board (delay (init-board port)))
 
 (defn init-pin [pin]
   (pin-mode board pin OUTPUT))
@@ -21,18 +21,18 @@
 
 (defn move-gear [val [i1 i2 e]]
   (cond (zero? val) (do
-                      (digital-write board i1 LOW)
-                      (digital-write board i2 LOW)
-                      (digital-write board e LOW)
+                      (digital-write @board i1 LOW)
+                      (digital-write @board i2 LOW)
+                      (digital-write @board e LOW)
                       )
         (> 0 val)   (do
-                      (digital-write board i1 LOW)
-                      (digital-write board i2 HIGH)
-                      (digital-write board e HIGH))
+                      (digital-write @board i1 LOW)
+                      (digital-write @board i2 HIGH)
+                      (digital-write @board e HIGH))
         (< 0 val)   (do
-                      (digital-write board i1 HIGH)
-                      (digital-write board i2 LOW)
-                      (digital-write board e HIGH))))
+                      (digital-write @board i1 HIGH)
+                      (digital-write @board i2 LOW)
+                      (digital-write @board e HIGH))))
 
 (defn move [[_ _ type] {val :val}]
   (cond (#{"y"}  type) (move-gear val left-pins)
