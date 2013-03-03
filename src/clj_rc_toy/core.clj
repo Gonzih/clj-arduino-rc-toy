@@ -3,7 +3,8 @@
             [clj-rc-toy.finders  :refer :all]
             [clj-rc-toy.events   :refer :all]
             [clj-rc-toy.handlers :refer :all]
-            [clj-rc-toy.loop     :refer :all]))
+            [clj-rc-toy.loop     :refer :all])
+  (:gen-class))
 
 (defn -main [& args]
   (let [xbox (find-controller "X-Box")]
