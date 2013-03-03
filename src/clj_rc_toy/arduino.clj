@@ -12,6 +12,7 @@
 (def right-pins [4 5 10])
 
 (defn port [] (System/getenv "PORT"))
+
 (def board (delay (init-board (port))))
 
 (defn init-pin [pin]
