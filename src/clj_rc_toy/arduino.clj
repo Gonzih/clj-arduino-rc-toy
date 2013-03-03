@@ -8,27 +8,6 @@
     (Thread/sleep 5000)
     board))
 
-(defn speed [board s]
-  (digital-write board 11 s)
-  (digital-write board 10 s))
-
-(defn go [board]
-  (digital-write board 3 LOW)
-  (digital-write board 5 LOW)
-  (digital-write board 2 HIGH)
-  (digital-write board 4 HIGH)
-  (speed board HIGH))
-
-(defn back [board]
-  (digital-write board 3 HIGH)
-  (digital-write board 5 HIGH)
-  (digital-write board 2 LOW)
-  (digital-write board 4 LOW)
-  (speed board HIGH))
-
-(defn stop [board]
-  (speed board LOW))
-
 (def left-pins  [2 3 11])
 (def right-pins [4 5 10])
 
@@ -39,7 +18,6 @@
   (pin-mode board pin OUTPUT))
 
 (map (partial map init-pin) [left-pins right-pins])
-
 
 (defn move-gear [val [i1 i2 e]]
   (cond (zero? val) (do
@@ -62,7 +40,6 @@
 
 (defn event [type value]
   (move type value))
-
 
 (defn on-event [type value key]
   (println (str "on event " type " " value " " key)))
