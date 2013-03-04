@@ -6,5 +6,6 @@
   :dependencies [[org.clojure/clojure "1.5.0"]
                  [org.clojure/math.numeric-tower "0.0.1"]
                  [jinput "0.0.3"]
-                 [clodiuno "0.0.4-SNAPSHOT"]]
+                 [clodiuno "0.0.4-SNAPSHOT"]
+                 [net.java.jinput/jinput "2.0.5"]]
   :main clj-rc-toy.core)
