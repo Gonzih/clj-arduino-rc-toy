@@ -1,39 +1,46 @@
 (ns clj-rc-toy.arduino
-  (:require [clodiuno.core    :refer :all])
-  (:require [clodiuno.firmata :refer :all]))
+  (:require [clodiuno.core    :refer :all]
+            [clodiuno.firmata :refer :all]
+            [clojure.math.numeric-tower :as math]))
+
+(defn init-pin [board pin]
+  (pin-mode board pin OUTPUT))
+
+(defn analog-pin [board pin]
+  (pin-mode board pin PWM))
+
+(def left-pins  [2 3 11])
+(def right-pins [4 5 10])
 
 (defn init-board [port]
   (System/setProperty "gnu.io.rxtx.SerialPorts" port)
   (let [board (arduino :firmata port :baudrate 9600)]
-    (Thread/sleep 5000)
+    (analog-pin board 11)
+    (analog-pin board 10)
+    (init-pin board 2)
+    (init-pin board 3)
+    (init-pin board 4)
+    (init-pin board 5)
     board))
-
-(def left-pins  [2 3 11])
-(def right-pins [4 5 10])
 
 (defn port [] (System/getenv "PORT"))
 
 (def board (delay (init-board (port))))
 
-(defn init-pin [pin]
-  (pin-mode board pin OUTPUT))
-
-(map (partial map init-pin) [left-pins right-pins])
-
 (defn move-gear [val [i1 i2 e]]
-  (cond (zero? val) (do
-                      (digital-write @board i1 LOW)
-                      (digital-write @board i2 LOW)
-                      (digital-write @board e LOW)
-                      )
-        (> 0 val)   (do
-                      (digital-write @board i1 LOW)
-                      (digital-write @board i2 HIGH)
-                      (digital-write @board e HIGH))
-        (< 0 val)   (do
-                      (digital-write @board i1 HIGH)
-                      (digital-write @board i2 LOW)
-                      (digital-write @board e HIGH))))
+  (let [pwm-val (-> val math/abs (* 250) int (+ 5))]
+    (cond (zero? val) (do
+                        (digital-write @board i1 LOW)
+                        (digital-write @board i2 LOW)
+                        (analog-write  @board e  LOW))
+          (> 0 val)   (do
+                        (digital-write @board i1 LOW)
+                        (digital-write @board i2 HIGH)
+                        (analog-write  @board e  pwm-val))
+          (< 0 val)   (do
+                        (digital-write @board i1 HIGH)
+                        (digital-write @board i2 LOW)
+                        (analog-write  @board e  pwm-val)))))
 
 (defn move [[_ _ type] {val :val}]
   (cond (#{"y"}  type) (move-gear val left-pins)
