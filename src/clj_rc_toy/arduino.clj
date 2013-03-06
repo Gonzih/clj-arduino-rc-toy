@@ -14,13 +14,12 @@
 
 (defn init-board [port]
   (System/setProperty "gnu.io.rxtx.SerialPorts" port)
-  (let [board (arduino :firmata port :baudrate 9600)]
-    (analog-pin board 11)
-    (analog-pin board 10)
-    (init-pin board 2)
-    (init-pin board 3)
-    (init-pin board 4)
-    (init-pin board 5)
+  (let [board (arduino :firmata port :baudrate 9600)
+        pins [left-pins right-pins]
+        e-pins (flatten (map (partial take-last 1) pins))
+        c-pins (flatten (map (partial take      2) pins))]
+    (doall (map (partial analog-pin board) e-pins))
+    (doall (map (partial init-pin   board) c-pins))
     board))
 
 (defn port [] (System/getenv "PORT"))
